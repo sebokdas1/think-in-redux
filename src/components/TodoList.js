@@ -18,6 +18,14 @@ export default function TodoList() {
               return true;
           }
         })
+        .filter((todo) => {
+          const { colors } = filters;
+          if (colors.length > 0) {
+            return colors.includes(todo.color);
+          } else {
+            return true;
+          }
+        })
         .map((todo) => (
           <Todo todo={todo} key={todo.id} />
         ))}
