@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { statusChanged } from "../redux/filters/actions";
+import { colorChanged, statusChanged } from "../redux/filters/actions";
 
 const incompleteTodoNumber = (todo_number) => {
   switch (todo_number) {
@@ -16,11 +16,18 @@ export default function Footer() {
   const dispatch = useDispatch();
   const todos = useSelector((state) => state.todos);
   const filters = useSelector((state) => state.filters);
-  const { status, color } = filters;
   const todoRemaining = todos.filter((todo) => !todo.completed).length;
+  const { status, colors } = filters;
 
   const statusChange = (status) => {
     dispatch(statusChanged(status));
+  };
+  const colorChange = (color) => {
+    if (colors.includes(color)) {
+      dispatch(colorChanged(color, "removed"));
+    } else {
+      dispatch(colorChanged(color, "added"));
+    }
   };
   return (
     <div className="mt-4 flex justify-between text-xs text-gray-500">
@@ -48,9 +55,24 @@ export default function Footer() {
         </li>
         <li></li>
         <li></li>
-        <li className="h-3 w-3 border-2 border-green-500 md:hover:bg-green-500 rounded-full cursor-pointer bg-green-500"></li>
-        <li className="h-3 w-3 border-2 border-red-500 md:hover:bg-red-500 rounded-full cursor-pointer"></li>
-        <li className="h-3 w-3 border-2 border-yellow-500 md:hover:bg-yellow-500 rounded-full cursor-pointer"></li>
+        <li
+          className={`h-3 w-3 border-2 border-green-500 md:hover:bg-green-500 rounded-full cursor-pointer ${
+            colors.includes("green") && "bg-green-500"
+          }`}
+          onClick={() => colorChange("green")}
+        ></li>
+        <li
+          className={`h-3 w-3 border-2 border-yellow-500 md:hover:bg-yellow-500 rounded-full cursor-pointer ${
+            colors.includes("yellow") && "bg-yellow-500"
+          }`}
+          onClick={() => colorChange("yellow")}
+        ></li>
+        <li
+          className={`h-3 w-3 border-2 border-red-500 md:hover:bg-red-500 rounded-full cursor-pointer ${
+            colors.includes("red") && "bg-red-500"
+          }`}
+          onClick={() => colorChange("red")}
+        ></li>
       </ul>
     </div>
   );
